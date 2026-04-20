@@ -176,7 +176,7 @@
                 <label>Дата рождения</label>
                 <input type="date" name="birthday" 
                     class="<?php echo $errors['birthday'] ? 'error' : ''; ?>" 
-                    value="<?php echo htmlspecialchars($values['birthday']); ?>">
+                    value="<?php echo htmlspecialchars($values['birthday'] ?? ''); ?>">
             </div>
 
             <div class="field">
@@ -192,7 +192,7 @@
                 <select name="prog_lang[]" multiple class="<?php echo $errors['prog_lang'] ? 'error' : ''; ?>">
                     <?php
                     $langs = [1=>'Pascal', 2=>'C', 3=>'C++', 4=>'JavaScript', 5=>'PHP', 6=>'Python', 7=>'Java', 8=>'Haskel', 9=>'Clojure', 10=>'Prolog', 11=>'Scala', 12=>'Go'];
-                    $selected_langs = explode(',', $values['prog_lang']);
+                    $selected_langs = !empty($values['prog_lang']) ? explode(',', $values['prog_lang']) : [];
                     foreach ($langs as $id => $name) {
                         $sel = in_array($id, $selected_langs) ? 'selected' : '';
                         echo "<option value='$id' $sel>$name</option>";
@@ -216,11 +216,11 @@
             <button type="submit">Сохранить</button>
         </form>
 
-        <div style="text-align: center; margin-top: 25px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
+        <div class="auth-link">
             <?php if (!empty($_SESSION['login'])): ?>
-                <a href="logout.php" style="color: #f35151; text-decoration: none; font-weight: 600;">Выйти (<?php echo htmlspecialchars($_SESSION['login']); ?>)</a>
+                <a href="logout.php" style="color: #ef4444; text-decoration: none; font-weight: 600;">Выйти (<?php echo htmlspecialchars($_SESSION['login']); ?>)</a>
             <?php else: ?>
-                <a href="login.php" style="color: #689bec; text-decoration: none; font-weight: 600;">Войти для изменения</a>
+                <a href="login.php" style="color: #3b82f6; text-decoration: none; font-weight: 600;">Войти для изменения</a>
             <?php endif; ?>
         </div>
 
