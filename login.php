@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             h2 {
                 margin: 0 0 20px 0;
                 text-align: center;
-                color: #184389;
+                color: #1b4ea0;
             }
             input {
                 width: 100%;
