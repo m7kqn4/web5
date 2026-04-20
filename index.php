@@ -96,10 +96,16 @@ else {
     
     $birthday = $_POST['birthday'] ?? '';
     if (empty($birthday)) {
-        setcookie('birthdate_error', '1', time() + 24*60*60);
+        setcookie('birthday_error', '1', time() + 24*60*60);
         $errors = true;
     } else {
         $age = date_diff(date_create($birthday), date_create('today'))->y;
+        if ($age < 18) {
+            setcookie('birthday_error', '1', time() + 24*60*60);
+            $errors = true;
+        } else {
+            setcookie('birthday_value', $birthday, time() + 30*24*60*60);
+        }
     }
     
     $gender = $_POST['gender'] ?? '';
@@ -112,7 +118,7 @@ else {
     
     $prog_lang = $_POST['prog_lang'] ?? [];
     if (empty($prog_lang)) {
-        setcookie('languages_error', '1', time() + 24*60*60);
+        setcookie('prog_lang_error', '1', time() + 24*60*60);
         $errors = true;
     } else {
         $languages_str = implode(',', $prog_lang);
@@ -162,7 +168,7 @@ else {
     } else {
         $stmt = $db->prepare("INSERT INTO form_data (fio, email, phone, birthday, gender, prog_lang, bio, agreement) 
                               VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$fio, $email, $phone, $birthday, $gender, $languages_str, $bio, $agreement]);
+        $stmt->execute([$fio, $email, $phone, $birthday, $gender, $prog_lang_str, $bio, $agreement]);
         $formDataId = $db->lastInsertId();
         
         $login = 'user_' . substr(md5(uniqid(mt_rand(), true)), 0, 8);
@@ -172,13 +178,13 @@ else {
         $stmt = $db->prepare("INSERT INTO users (login, password_hash, form_data_id) VALUES (?, ?, ?)");
         $stmt->execute([$login, $passwordHash, $formDataId]);
         
-        setcookie('login_display', $login, time() + 24*60*60);
-        setcookie('pass_display', $rawPassword, time() + 24*60*60);
+        setcookie('login_display', $login, time() + 24*60*60, '/');
+        setcookie('pass_display', $rawPassword, time() + 24*60*60, '/');
     }
     
     session_write_close();
     
-    setcookie('save', '1', time() + 24*60*60);
+    setcookie('save', '1', time() + 24*60*60, '/');
     
     header('Location: index.php');
     exit();
