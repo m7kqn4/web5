@@ -80,11 +80,11 @@ else {
     
     $phone = trim($_POST['phone'] ?? '');
     $phone_clean = preg_replace('/\D/', '', $phone);
-    if (empty($phone_clean) || strlen($phone_clean) != 10) {
-        setcookie('phone_error', '1', time() + 24*60*60);
-        $errors = true;
+    if (empty($phone_clean) || strlen($phone_clean) < 10 || strlen($phone_clean) > 15) {
+    setcookie('phone_error', '1', time() + 24*60*60);
+    $errors = true;
     } else {
-        setcookie('phone_value', $phone, time() + 30*24*60*60);
+    setcookie('phone_value', $phone, time() + 30*24*60*60);
     }
     
     $email = trim($_POST['email'] ?? '');
@@ -95,12 +95,12 @@ else {
         setcookie('email_value', $email, time() + 30*24*60*60);
     }
     
-    $birthdate = $_POST['birthdate'] ?? '';
-    if (empty($birthdate)) {
+    $birthday = $_POST['birthday'] ?? '';
+    if (empty($birthday)) {
         setcookie('birthdate_error', '1', time() + 24*60*60);
         $errors = true;
     } else {
-        $age = date_diff(date_create($birthdate), date_create('today'))->y;
+        $age = date_diff(date_create($birthday), date_create('today'))->y;
     }
     
     $gender = $_POST['gender'] ?? '';
