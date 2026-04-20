@@ -5,20 +5,18 @@ $db = new PDO('mysql:host=localhost;dbname=u82641;charset=utf8', 'u82641', '7937
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-  $messages = array();
-  $errors = array();
-  $values = array();
-  $showCredentials = false;
-  $generatedLogin = '';
-  $generatedPassword = '';
+    $messages = array();
+    $errors = array();
+    $values = array();
+    $showCredentials = false;
+    $generatedLogin = '';
+    $generatedPassword = '';
 
-  if (!empty($_COOKIE['save'])) {
-    setcookie('save', '', 100000);
-    setcookie('login', '', 100000);
-    setcookie('pass', '', 100000);
-    $messages[] = 'Спасибо, результаты сохранены.';
-
-    if (!empty($_COOKIE['login_display']) && !empty($_COOKIE['pass_display'])) {
+    if (!empty($_COOKIE['save'])) {
+        setcookie('save', '', 100000);
+        $messages[] = 'Спасибо, результаты сохранены.';
+        
+        if (!empty($_COOKIE['login_display']) && !empty($_COOKIE['pass_display'])) {
             $generatedLogin = $_COOKIE['login_display'];
             $generatedPassword = $_COOKIE['pass_display'];
             $showCredentials = true;
@@ -27,16 +25,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
     }
 
-  $error_fields = ['fio', 'phone', 'email', 'birthday', 'gender', 'prog_lang', 'agreement'];
+    $error_fields = ['fio', 'phone', 'email', 'birthday', 'gender', 'prog_lang', 'agreement'];
     foreach ($error_fields as $field) {
         $errors[$field] = !empty($_COOKIE[$field . '_error']);
         if ($errors[$field]) {
             setcookie($field . '_error', '', 100000);
-            $messages[] = '<div class="msg-info">Ошибка в ' . $field . '</div>';
         }
     }
 
-  $value_fields = ['fio', 'phone', 'email', 'birthday', 'gender', 'bio', 'agreement', 'prog_lang'];
+    $value_fields = ['fio', 'phone', 'email', 'birthday', 'gender', 'bio', 'agreement', 'prog_lang'];
     foreach ($value_fields as $field) {
         $values[$field] = empty($_COOKIE[$field . '_value']) ? '' : $_COOKIE[$field . '_value'];
     }
@@ -59,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $values['prog_lang'] = $userData['prog_lang'];
                 $values['bio'] = $userData['bio'];
                 $values['agreement'] = $userData['agreement'];
-                $messages[] = '<div class="msg-success">Вы авторизованы ' . htmlspecialchars($_SESSION['login']) . '. Можете редактировать данные.</div>';
+                $messages[] = 'Вы авторизованы ' . htmlspecialchars($_SESSION['login']) . '. Можете редактировать данные.';
             }
         }
     }
@@ -68,6 +65,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 } 
 else {
     $errors = false;
+    
+    $error_fields = ['fio', 'phone', 'email', 'birthday', 'gender', 'prog_lang', 'agreement'];
     
     $fio = trim($_POST['fio'] ?? '');
     if (empty($fio)) {
@@ -79,11 +78,11 @@ else {
     
     $phone = trim($_POST['phone'] ?? '');
     $phone_clean = preg_replace('/\D/', '', $phone);
-    if (empty($phone_clean) || strlen($phone_clean) < 10 || strlen($phone_clean) > 15) {
-    setcookie('phone_error', '1', time() + 24*60*60);
-    $errors = true;
+    if (empty($phone_clean) || strlen($phone_clean) < 10 || strlen($phone_clean) > 11) {
+        setcookie('phone_error', '1', time() + 24*60*60);
+        $errors = true;
     } else {
-    setcookie('phone_value', $phone, time() + 30*24*60*60);
+        setcookie('phone_value', $phone, time() + 30*24*60*60);
     }
     
     $email = trim($_POST['email'] ?? '');
@@ -121,8 +120,8 @@ else {
         setcookie('prog_lang_error', '1', time() + 24*60*60);
         $errors = true;
     } else {
-        $languages_str = implode(',', $prog_lang);
-        setcookie('languages_value', $languages_str, time() + 30*24*60*60);
+        $prog_lang_str = implode(',', $prog_lang);
+        setcookie('prog_lang_value', $prog_lang_str, time() + 30*24*60*60);
     }
     
     $agreement = $_POST['agreement'] ?? '';
@@ -163,7 +162,7 @@ else {
             $stmt = $db->prepare("UPDATE form_data SET 
                 fio = ?, email = ?, phone = ?, birthday = ?, gender = ?, 
                 prog_lang = ?, bio = ?, agreement = ? WHERE id = ?");
-            $stmt->execute([$fio, $email, $phone, $birthday, $gender, $languages_str, $bio, $agreement, $user['form_data_id']]);
+            $stmt->execute([$fio, $email, $phone, $birthday, $gender, $prog_lang_str, $bio, $agreement, $user['form_data_id']]);
         }
     } else {
         $stmt = $db->prepare("INSERT INTO form_data (fio, email, phone, birthday, gender, prog_lang, bio, agreement) 
