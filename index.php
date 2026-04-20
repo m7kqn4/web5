@@ -1,5 +1,4 @@
 <?php
-
 header('Content-Type: text/html; charset=UTF-8');
 
 $db = new PDO('mysql:host=localhost;dbname=u82641;charset=utf8', 'u82641', '7937378');
