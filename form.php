@@ -19,7 +19,6 @@
     }
     .credentials {
     background: #fff3e0;
-    border: 2px solid #e8e368;
     padding: 10px;
     margin: 10px 0;
     text-align: center;
@@ -127,6 +126,17 @@
             box-shadow: 0 4px 15px rgba(59, 130, 246, 0.25); margin-top: 10px;
         }
         button:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(59, 130, 246, 0.35); }
+        
+        .auth-link {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+        .auth-link a {
+            text-decoration: none;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -141,10 +151,10 @@
 
         <?php if (!empty($showCredentials) && !empty($generatedLogin) && !empty($generatedPassword)): ?>
         <div style="background: #fff3e0; border: 2px solid #ff9800; border-radius: 16px; padding: 15px; margin-bottom: 20px; text-align: center;">
-            <strong style="color: #37d4f0;">Данные были сохранены. Ваши учётные данные (показываются один раз):</strong><br><br>
+            <strong style="color: #e65100;">Данные были сохранены. Ваши учётные данные (показываются один раз):</strong><br><br>
             <strong>Логин:</strong> <code style="background: white; padding: 4px 8px; border-radius: 6px;"><?php echo htmlspecialchars($generatedLogin); ?></code><br>
             <strong>Пароль:</strong> <code style="background: white; padding: 4px 8px; border-radius: 6px;"><?php echo htmlspecialchars($generatedPassword); ?></code><br><br>
-            <small style="color: #b71616;">Сохраните или запомните эти данные, они понадобяться для входа.</small>
+            <small style="color: #bf360c;">Сохраните или запомните эти данные, они понадобятся для входа.</small>
         </div>
         <?php endif; ?>
 
@@ -155,21 +165,21 @@
                 <label>ФИО</label>
                 <input type="text" name="fio" 
                     class="<?php echo $errors['fio'] ? 'error' : ''; ?>" 
-                    value="<?php echo htmlspecialchars($values['fio']); ?>" placeholder="Иван Иванов Иванович">
+                    value="<?php echo htmlspecialchars($values['fio'] ?? ''); ?>" placeholder="Иван Иванов Иванович">
             </div>
 
             <div class="field">
                 <label>Телефон</label>
                 <input type="tel" name="phone" 
                     class="<?php echo $errors['phone'] ? 'error' : ''; ?>" 
-                    value="<?php echo htmlspecialchars($values['phone']); ?>" placeholder="+7 800 000 00 00">
+                    value="<?php echo htmlspecialchars($values['phone'] ?? ''); ?>" placeholder="+7 800 000 00 00">
             </div>
 
             <div class="field">
                 <label>E-mail</label>
                 <input type="email" name="email" 
                     class="<?php echo $errors['email'] ? 'error' : ''; ?>" 
-                    value="<?php echo htmlspecialchars($values['email']); ?>" placeholder="mail@example.com">
+                    value="<?php echo htmlspecialchars($values['email'] ?? ''); ?>" placeholder="mail@example.com">
             </div>
 
             <div class="field">
@@ -203,11 +213,11 @@
 
             <div class="field">
                 <label>Биография</label>
-                <textarea name="bio"><?php echo htmlspecialchars($values['bio']); ?></textarea>
+                <textarea name="bio"><?php echo htmlspecialchars($values['bio'] ?? ''); ?></textarea>
             </div>
 
             <div class="field">
-                <label class="<?php echo $errors['agreement'] ? 'error' : ''; ?>" style="display:flex; align-items:center; gap:8px; border-radius:8px; padding:4px;">
+                <label style="display:flex; align-items:center; gap:8px; border-radius:8px; padding:4px;">
                     <input type="checkbox" name="agreement" value="1" <?php echo (($values['agreement'] ?? '') == '1') ? 'checked' : ''; ?>>
                     <span>С согласием ознакомлен(а)</span>
                 </label>
